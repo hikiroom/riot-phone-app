@@ -1,0 +1,208 @@
+<app>
+<div class="container">
+    <div class="screen-area">
+        <nscreen number={state.screenNum} time={false} addNumber={true} />
+    </div>
+    <div class="button-area">
+        <nbutton onclick={() => {setNumber(item.mainText)}} each={item in nbutton} mainText={item.mainText} subText={item.subText} padding={item.padding}/>
+        <ibutton onclick={pushCallBtn} class="call-button" src="/assets/img/icon_call.png" bg="#4bd964"/>
+        <dbutton onclick={deleteNumber} class="delete-button"/>
+    </div>
+
+    <callview if={state.isCall}>
+        <div>
+            <div class="screen-area">
+                <nscreen number={state.screenNum} time={true} addNumber={false} countStart={state.countStart} />
+            </div>
+            <div class="button-area">
+                <tbutton each={item in tbutton} src={item.src} text={item.text} class={item.class} />
+            </div>
+            <ibutton onclick={callOff} class="call-off-button" src="/assets/img/icon_call-02.png" bg="#ea4f3d"/>
+        </div>
+    </callview>
+</div>
+
+<script>
+import nbutton from './components/Nbutton';
+import ibutton from './components/Ibutton';
+import dbutton from './components/Dbutton';
+import tbutton from './components/Tbutton';
+import nscreen from './components/Nscreen';
+import callview from './components/Callview';
+export default {
+    components: {
+        nscreen,
+        nbutton,
+        ibutton,
+        tbutton,
+        dbutton,
+        callview,
+    },
+    state: {
+        screenNum: '',
+        isCall: false,
+        countStart: false,
+        voice: null,
+    },
+    nbutton: [
+        {mainText: '1', subText: '',    padding: true},
+        {mainText: '2', subText: 'ABC', padding: false},
+        {mainText: '3', subText: 'DEF', padding: false},
+        {mainText: '4', subText: 'GHI', padding: false},
+        {mainText: '5', subText: 'JKL', padding: false},
+        {mainText: '6', subText: 'MNO', padding: false},
+        {mainText: '7', subText: 'PQRS', padding: false},
+        {mainText: '8', subText: 'TUV', padding: false},
+        {mainText: '9', subText: 'WXYZ', padding: false},
+        {mainText: '*', subText: '',    padding: false},
+        {mainText: '0', subText: '+', padding: false},
+        {mainText: '#', subText: '',    padding: false},
+    ],
+    tbutton: [
+        {src: '/assets/img/icon_mute.png', class: 'mute', text: 'mute'},
+        {src: '/assets/img/icon_keypad.png', class: 'keypad', text: 'keypad'},
+        {src: '/assets/img/icon_speaker.png', class: 'speaker', text: 'speaker'},
+        {src: '/assets/img/icon_add-call.png', class: 'add-call', text: 'add call'},
+        {src: '/assets/img/icon_facetime.png', class: 'facetime', text: 'FaceTime'},
+        {src: '/assets/img/icon_contacts.png', class: 'contacts', text: 'contacts'},
+    ],
+    setNumber(num) {
+        const screenNum = this.state.screenNum + num;
+
+        this.update({
+            screenNum: screenNum
+        });
+    },
+    deleteNumber() {
+        const screenNum = this.state.screenNum.slice(0, -1);
+
+        this.update({
+            screenNum: screenNum
+        });
+    },
+    pushCallBtn() {
+        const screenNum = this.state.screenNum;
+
+        this.update({
+            isCall: true
+        });
+        this.callRequest(screenNum).then((requestData) => {
+            if (Object.keys(requestData).length) {
+                const voiceURI = requestData.voiceURI;
+                const voice = new Audio();
+
+                voice.src = voiceURI;
+                this.update({
+                    countStart: true,
+                    voice: voice
+                });
+                setTimeout(() => {
+                    if (this.state.voice) {
+                        this.state.voice.play();
+                    }
+                }, 2000);
+            } else {
+                setTimeout(() => {
+                    this.update({
+                        isCall: false
+                    });
+                }, 500);
+            }
+        });
+    },
+    callRequest(num) {
+        return fetch('/assets/json/phoneBook.json').then((res) => {
+            return res.json();
+        }).then((data) => {
+            const requestData = data[num];
+
+            if (requestData) {
+                return requestData;
+            } else {
+                return {};
+            }
+        });
+    },
+    callOff() {
+        this.state.voice.pause();
+        this.update({
+            isCall: false,
+            countStart: false,
+            voice: null,
+        });
+    }
+}
+</script>
+
+<style>
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+    padding: 8vw 12.6666667vw 0;
+    box-sizing: border-box;
+}
+.screen-area {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin-bottom: 8.53333333vw;
+}
+.button-area {
+    display: grid;
+    grid-template-columns: repeat(3, 20vw);
+    grid-template-rows: repeat(5, 20vw);
+    grid-gap: 6.93333333vw 7.33333333vw;
+    align-items: center;
+}
+.call-button {
+    grid-column: 2;
+    position: relative;
+}
+.call-button img {
+    width: 8.53333333vw;
+}
+.delete-button {
+    grid-column: 3;
+    margin: 0 auto;
+}
+callview .screen-area {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin-bottom: 26.1333333vw;
+}
+callview .button-area {
+    display: grid;
+    grid-template-columns: repeat(3, 20vw);
+    grid-template-rows: repeat(2, 26.6666667vw);
+    grid-gap: 5.86666667vw 7.33333333vw;
+    margin-bottom: 18.4vw;
+}
+.call-off-button {
+    margin: 0 auto;
+}
+.call-off-button img {
+    height: 3.6vw;
+}
+tbutton.mute img {
+    height: 8.53333333vw;
+}
+tbutton.keypad img {
+    height: 7.86666667vw;
+}
+tbutton.speaker img {
+    height: 7.46666667vw;
+}
+tbutton.add-call img {
+    height: 6.13333333vw;
+}
+tbutton.facetime img {
+    height: 4.66666667vw;
+}
+tbutton.contacts img {
+    height: 6.66666667vw;
+}
+</style>
+</app>

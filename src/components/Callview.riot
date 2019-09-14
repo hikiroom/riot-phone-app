@@ -1,0 +1,51 @@
+<callview>
+<div class="callview">
+    <slot/>
+</div>
+
+<style>
+:host {
+    width: 100%;
+    height: 100%;
+    background: url(/assets/img/img_call-view-bg.jpg) center /cover no-repeat;
+    position: fixed;
+    overflow: hidden;
+    left: 0;
+    top: 0;
+}
+:host::before {
+    content: "";
+    display: block;
+    background: inherit;
+    position: absolute;
+    left: -25px;
+    top: -25px;
+    right: -25px;
+    bottom: -25px;
+    z-index: 1;
+    filter: blur(25px);
+}
+:host::after {
+    content: "";
+    display: block;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, .6);
+    position: absolute;
+    left: 0;
+    right: 0;
+    z-index: 2;
+}
+.callview {
+    width: 100%;
+    height: 100%;
+    padding: 8vw 12.6666667vw 0;
+    position: absolute;
+    color: #fff;
+    box-sizing: border-box;
+    top: 0;
+    left: 0;
+    z-index: 3;
+}
+</style>
+</callview>

@@ -1,0 +1,58 @@
+<dbutton>
+<button class="dbutton">
+    <span class="dbutton-inr">
+        <img src="/assets/img/icon_delete.png">
+    </span>
+</button>
+
+<style>
+:host {
+    width: 11.7333333vw;
+    height: 12.8vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.dbutton {
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    border: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.dbutton-inr {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 5.86666667vw;
+    height: 6.4vw;
+    margin-left: 2.26879181vw;
+    background: #e5e5e5;
+    border-radius: 0 5px 5px 0;
+    line-height: 1;
+    position: relative;
+}
+.dbutton-inr::before {
+    content: "";
+    display: block;
+    width: 4.52548339vw;
+    height: 4.52548339vw;
+    background: inherit;
+    margin-top: -2.26274169vw;
+    transform: rotate(45deg);
+    border-radius: 1px;
+    position: absolute;
+    top: 50%;
+    left: -2.26879181vw;
+    z-index: -1;
+}
+.dbutton-inr img {
+    display: block;
+    width: 2.93333333vw;
+    height: 2.93333333vw;
+}
+</style>
+</dbutton>

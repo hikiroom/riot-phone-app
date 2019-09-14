@@ -1,0 +1,33 @@
+<ibutton>
+<button class="ibutton" style={bg}>
+    <img src={props.src}>
+</button>
+
+<script>
+export default {
+    onBeforeMount() {
+        if (this.props.bg) {
+            this.bg = 'background:' + this.props.bg + ';';
+        }
+    }
+}
+</script>
+
+<style>
+:host {
+    display: block;
+    width: 20vw;
+    height: 20vw;
+}
+.ibutton {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    border: 0;
+}
+</style>
+</ibutton>

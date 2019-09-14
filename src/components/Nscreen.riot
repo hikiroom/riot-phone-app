@@ -1,0 +1,92 @@
+<nscreen>
+<div class='nscreen'>
+    <p class="number">{props.number}</p>
+    <p if={props.time} class="time-screen">{state.timeScreenText}</p>
+    <button if={props.addNumber} class={'addNumber' + hidden}>Add Number</button>
+</div>
+
+<script>
+let countTimer = null;
+export default {
+    state: {
+        timeScreenText: 'calling...',
+        timeScreenNum: 0,
+    },
+    onBeforeMount(props) {
+        this.hidden = props.number === '' ? ' hidden' : '';
+    },
+    onBeforeUpdate(props) {
+        this.hidden = props.number === '' ? ' hidden' : '';
+
+        if (props.countStart) {
+            this.countStart();
+        } else {
+            if (countTimer) {
+                clearTimeout(countTimer); 
+            }
+        }
+    },
+    countStart() {
+        countTimer = setTimeout(() => {
+            const num = this.state.timeScreenNum++;
+
+            this.update({
+                timeScreenText: this.convTimeScreenNum2Text(num)
+            });
+        }, 1000);
+    },
+    convTimeScreenNum2Text(num) {
+        let min = 0;
+        let sec = 0;
+
+        min = this.zeroPadding(Math.floor(num / 60));
+        sec = this.zeroPadding(num % 60);
+
+        return `${min}:${sec}`;
+    },
+    zeroPadding(num) {
+        num = String(num);
+
+        if (num.length === 1) {
+            num = '0' + num;
+        }
+
+        return num;
+    }
+}
+</script>
+
+<style>
+:host {
+    width: 100%;
+}
+.nscreen {
+    width: 100%;
+    max-width: 87.3333333vw;
+    overflow: hidden;
+    line-height: 1;
+    text-align: center;
+}
+.number {
+    display: inline-block;
+    height: 3.2rem;
+    margin-bottom: 4.8vw;
+    font-size: 3.2rem;
+}
+.addNumber {
+    display: block;
+    height: 1.6rem;
+    background: transparent;
+    margin: 0 auto;
+    border: 0;
+    font-size: 1.6rem;
+    color: #147df3;
+}
+.time-screen {
+    line-height: 1.5;
+}
+.hidden {
+    visibility: hidden;
+}
+</style>
+</nscreen>
